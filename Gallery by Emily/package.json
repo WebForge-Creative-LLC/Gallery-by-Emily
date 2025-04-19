@@ -1,0 +1,16 @@
+{
+  "name": "gallery-by-emily",
+  "version": "1.0.0",
+  "description": "Gallery by Emily - Art Portfolio and E-commerce Site",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.7",
+    "stripe": "^12.4.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^15.0.0"
+  }
+} 
