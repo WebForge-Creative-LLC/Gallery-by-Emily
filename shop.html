@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Gallery by Emily</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripePublicKey = 'pk_test_51RFk285TUO5rXThKiBmt6eyGdsPIwrArsMOmWPONsAN6qLvBbqRiQnDPU31Om43YmmO01r6l8nIqixbBH19UwCoJ00OJCwnMHz';
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <a href="index.html">
+                <img src="images/Gallery by Emily Logo.png" alt="Gallery by Emily Logo" class="logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="shop.html" class="active">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Commission</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="shop-hero">
+            <div class="shop-hero-content">
+                <h1>Shop Prints</h1>
+                <p>Bring home a piece of vibrant, joyful art</p>
+            </div>
+        </section>
+
+        <section class="shop-filters">
+            <div class="filter-container">
+                <div class="search-filter">
+                    <input type="text" id="search-input" placeholder="Search artwork...">
+                </div>
+                <div class="category-filter">
+                    <select id="category-select" aria-label="Filter by category">
+                        <option value="all">All Categories</option>
+                        <option value="abstract">Abstract</option>
+                        <option value="floral">Floral</option>
+                        <option value="landscape">Landscape</option>
+                        <option value="portrait">Portrait</option>
+                    </select>
+                </div>
+                <div class="sort-filter">
+                    <select id="sort-select" aria-label="Sort by">
+                        <option value="featured">Featured</option>
+                        <option value="newest">Newest</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="shop-grid">
+            <div class="product-card" data-category="abstract" data-price="35" data-date="2023-06-01">
+                <div class="product-image">
+                    <img src="images/Quiet Strength (Print).jpg" alt="Quiet Strength Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Quiet Strength</h3>
+                    <p class="product-category">Abstract Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="floral" data-price="35" data-date="2023-07-15">
+                <div class="product-image">
+                    <img src="images/The Daily Moo (Print).jpg" alt="The Daily Moo Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>The Daily Moo</h3>
+                    <p class="product-category">Floral Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="portrait" data-price="35" data-date="2023-08-10">
+                <div class="product-image">
+                    <img src="images/The Industry.jpg" alt="The Industry Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>The Industry</h3>
+                    <p class="product-category">Portrait Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="abstract" data-price="35" data-date="2023-05-20">
+                <div class="product-image">
+                    <img src="images/Baci Di Primavera (Print).jpg" alt="Baci Di Primavera Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Baci Di Primavera</h3>
+                    <p class="product-category">Abstract Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="landscape" data-price="35" data-date="2023-09-05">
+                <div class="product-image">
+                    <img src="images/Divine Nature (Print).jpg" alt="Divine Nature Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Divine Nature</h3>
+                    <p class="product-category">Landscape Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="floral" data-price="35" data-date="2023-09-20">
+                <div class="product-image">
+                    <img src="images/Flowers Take Time To Bloom (Print).jpg" alt="Flowers Take Time To Bloom Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Flowers Take Time To Bloom</h3>
+                    <p class="product-category">Floral Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="abstract" data-price="35" data-date="2023-09-20">
+                <div class="product-image">
+                    <img src="images/Blossoming Day Dream (Print).jpg" alt="Blossoming Day Dream Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Blossoming Day Dream</h3>
+                    <p class="product-category">Abstract Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="abstract" data-price="35" data-date="2023-09-20">
+                <div class="product-image">
+                    <img src="images/Be Afraid To Stand Still (Print).jpg" alt="Be Afraid To Stand Still Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Be Afraid To Stand Still</h3>
+                    <p class="product-category">Abstract Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="abstract" data-price="35" data-date="2023-09-20">
+                <div class="product-image">
+                    <img src="images/Ti Amo Di Piu (Print).jpg" alt="Ti Amo Di Piu Print">
+                    <div class="product-overlay">
+                        <a href="#" class="btn btn-small">Quick View</a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Ti Amo Di Piu</h3>
+                    <p class="product-category">Abstract Print</p>
+                    <p class="product-price">$35.00</p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="shipping-info">
+            <div class="shipping-container">
+                <div class="shipping-item">
+                    <div class="shipping-icon">🚚</div>
+                    <h3>Free Shipping</h3>
+                    <p>On all orders over $75</p>
+                </div>
+                <div class="shipping-item">
+                    <div class="shipping-icon">🔒</div>
+                    <h3>Secure Payment</h3>
+                    <p>Safe & trusted checkout</p>
+                </div>
+                <div class="shipping-item">
+                    <div class="shipping-icon">⭐</div>
+                    <h3>Quality Guarantee</h3>
+                    <p>Premium print quality</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shopping Cart Sidebar (Hidden by default) -->
+        <div class="cart-sidebar">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <button class="close-cart">&times;</button>
+            </div>
+            <div class="cart-items">
+                <!-- Cart items will be added here dynamically -->
+                <div class="empty-cart-message">Your cart is empty</div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total-amount">$0.00</span>
+                </div>
+                <button class="btn checkout-btn">Checkout</button>
+            </div>
+        </div>
+        <div class="cart-overlay"></div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/Gallery by Emily Logo.png" alt="Gallery by Emily Logo" class="logo-small">
+                <p>Gallery by Emily</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="contact.html">Commission</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <p>Email: hello@gallerybyemily.com</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">Instagram</a>
+                    <a href="#" class="social-icon">Facebook</a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Gallery by Emily. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/shop.js"></script>
+</body>
+
+</html>
