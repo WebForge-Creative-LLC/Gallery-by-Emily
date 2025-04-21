@@ -1,0 +1,17 @@
+{
+  "name": "gallery-by-emily",
+  "version": "1.0.0",
+  "description": "Multi-product shop with Stripe Checkout",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "stripe": "^18.0.0"
+  }
+}

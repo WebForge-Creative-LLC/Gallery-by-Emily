@@ -1,0 +1,94 @@
+const express = require('express');
+const Stripe = require('stripe');
+const cors = require('cors');
+const path = require('path');
+const axios = require('axios');
+const app = express();
+
+require('dotenv').config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const brevoApiKey = process.env.BREVO_API_KEY;
+
+// ✅ Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static frontend files
+
+// ✅ Stripe Checkout session route
+app.post('/create-checkout-session', async (req, res) => {
+  const items = req.body.items;
+
+  if (!items || items.length === 0) {
+    return res.status(400).json({ error: "No items in cart" });
+  }
+
+  const line_items = items.map(item => ({
+    price: item.priceId,
+    quantity: item.quantity,
+  }));
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items,
+      success_url: 'https://www.gallerybyemily.com/success.html',
+      cancel_url: 'https://www.gallerybyemily.com/shop.html',
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error("❌ Stripe Error:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✅ Brevo Email contact route
+app.post('/send-email', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  try {
+    await axios.post('https://api.brevo.com/v3/smtp/email', {
+      sender: {
+        name: "WebForge Creative Contact Form",
+        email: "webforgecreativellc@gmail.com"
+      },
+      to: [{
+        email: "kevinhanson2027@gmail.com",
+        name: "Client"
+      }],
+      subject: `New Contact Form Submission from ${name}`,
+      htmlContent: `
+        <h2>New Contact Message</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong><br>${message}</p>
+      `
+    }, {
+      headers: {
+        'api-key': brevoApiKey,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    res.json({ message: '✅ Message sent successfully!' });
+  } catch (err) {
+    console.error("❌ Brevo Email Error:", err.response?.data || err.message);
+    res.status(500).json({ error: 'Email sending failed.' });
+  }
+});
+
+// ✅ Fallback route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ✅ Port setup for Render
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
