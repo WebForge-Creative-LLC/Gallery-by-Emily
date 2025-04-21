@@ -2,9 +2,9 @@
 
 /* Events Hero Section */
 .events-hero {
-    background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+    background: linear-gradient(to right, var(--primary-color), var(--primary-color));
     color: var(--text-light);
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-xl) var(--spacing-md);
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -97,97 +97,55 @@
 }
 
 .event-card {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--spacing-md);
-    background-color: var(--bg-off-white);
+    background-color: var(--bg-light);
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform var(--transition-fast);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: var(--spacing-md);
+}
+
+.event-image {
     position: relative;
+    height: 300px;
+    overflow: hidden;
 }
 
-.event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
 }
 
-.event-card.featured {
-    border: 2px solid var(--accent-color);
+.event-card:hover .event-image img {
+    transform: scale(1.05);
 }
 
-.event-tag {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: var(--accent-color);
-    color: var(--text-dark);
-    padding: 0.3rem 0.8rem;
-    border-radius: var(--border-radius);
-    font-weight: 700;
-    font-size: 0.8rem;
-    z-index: 2;
+.event-content {
+    padding: var(--spacing-md);
 }
 
 .event-date {
-    background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color));
-    color: var(--text-light);
-    min-width: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: var(--spacing-md);
-}
-
-.date-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.event-day {
-    font-size: 1.8rem;
+    color: var(--primary-color);
     font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 0.3rem;
+    margin-bottom: var(--spacing-xs);
 }
 
-.event-month {
-    font-size: 1.1rem;
-    text-transform: uppercase;
-}
-
-.event-details {
-    padding: var(--spacing-md);
-    flex: 1;
-}
-
-.event-details h3 {
+.event-title {
     font-size: 1.5rem;
     margin-bottom: var(--spacing-sm);
-    color: var(--primary-color);
 }
 
 .event-meta {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
-}
-
-.event-time,
-.event-location {
-    display: flex;
-    align-items: center;
     color: var(--text-muted);
-    font-size: 0.95rem;
 }
 
-.event-icon {
-    margin-right: 0.5rem;
-    font-style: normal;
+.event-meta i {
+    color: var(--primary-color);
+    margin-right: var(--spacing-xs);
 }
 
 .event-description {
@@ -195,9 +153,75 @@
     line-height: 1.6;
 }
 
-.event-actions {
-    display: flex;
-    gap: var(--spacing-sm);
+.rsvp-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.rsvp-btn:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.past-events {
+    background-color: var(--bg-off-white);
+    padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.past-events h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-color);
+}
+
+.past-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.past-event-card {
+    background-color: var(--bg-light);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.past-event-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.past-event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.past-event-content {
+    padding: var(--spacing-md);
+}
+
+.past-event-date {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+}
+
+.past-event-title {
+    font-size: 1.2rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.past-event-description {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 /* Event Signup Section */
@@ -383,41 +407,50 @@
     .events-hero h1 {
         font-size: 2.5rem;
     }
-    
+
     .events-hero p {
         font-size: 1.1rem;
     }
-    
+
     .event-card {
         grid-template-columns: 1fr;
     }
-    
+
     .event-date {
         min-width: unset;
         padding: var(--spacing-sm);
     }
-    
+
     .date-wrapper {
         flex-direction: row;
         gap: 0.5rem;
         justify-content: center;
     }
-    
+
     .private-events-container {
         grid-template-columns: 1fr;
     }
-    
+
     .signup-form .form-group {
         flex-direction: column;
     }
-    
+
     .signup-form input {
         border-radius: var(--border-radius);
         margin-bottom: 0.5rem;
     }
-    
+
     .signup-form button {
         border-radius: var(--border-radius);
         padding: 0.8rem;
     }
-} 
+
+    .event-meta {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+
+    .past-events-grid {
+        grid-template-columns: 1fr;
+    }
+}

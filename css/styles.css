@@ -1,9 +1,9 @@
 /* ===== VARIABLES ===== */
 :root {
     /* Primary Colors */
-    --primary-color: #ff6b6b;
-    --secondary-color: #4ecdc4;
-    --accent-color: #ffe66d;
+    --primary-color: #ff86ef;
+    --secondary-color: #ff86ef;
+    --accent-color: #ff86ef;
 
     /* Text Colors */
     --text-dark: #2d3436;
@@ -13,7 +13,7 @@
     /* Background Colors */
     --bg-light: #ffffff;
     --bg-off-white: #f9f9f9;
-    --bg-accent: #ffeaa7;
+    --bg-accent: #ff86ef;
 
     /* Other Colors */
     --success-color: #55efc4;
@@ -381,27 +381,40 @@ nav {
 
 /* ===== FOOTER ===== */
 footer {
-    background-color: var(--text-dark);
+    background-color: var(--primary-color);
     color: var(--text-light);
-    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
 }
 
 .footer-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-logos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.footer-logo img,
+.webforge-logo img {
+    width: 150px;
+    height: auto;
+    object-fit: contain;
 }
 
 .footer-logo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    margin-bottom: 0.5rem;
 }
 
-.logo-small {
-    height: 40px;
-    margin-bottom: var(--spacing-sm);
+.webforge-logo {
+    margin-top: 0.5rem;
 }
 
 .footer-links h4,
@@ -413,20 +426,19 @@ footer {
 .footer-links ul {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .footer-links a,
 .footer-contact a {
-    color: var(--bg-off-white);
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
+    color: var(--text-light);
+    transition: color var(--transition-fast);
 }
 
 .footer-links a:hover,
 .footer-contact a:hover {
-    opacity: 1;
-    color: var(--accent-color);
+    color: var(--bg-light);
+    opacity: 0.8;
 }
 
 .social-icons {
@@ -437,10 +449,9 @@ footer {
 
 .copyright {
     text-align: center;
+    margin-top: var(--spacing-lg);
     padding-top: var(--spacing-md);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.9rem;
-    opacity: 0.7;
 }
 
 /* ===== RESPONSIVE STYLES ===== */
