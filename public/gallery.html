@@ -29,8 +29,12 @@
                 <li><a href="shop.html">Shop</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="events.html">Events</a></li>
-                <li><a href="contact.html">Commission</a></li>
+                <li><a href="contact.html" class="nav-btn">Commission</a></li>
             </ul>
+            <div class="cart-icon-container">
+                <div class="cart-icon">🛒</div>
+                <span class="cart-count">0</span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -58,13 +62,15 @@
 
         <section class="gallery-section">
             <div class="gallery-grid">
-                <!-- Gallery Items -->
+                <!-- Original Artwork -->
                 <div class="gallery-item" data-category="original">
                     <img src="/images/Soul Dog (Original).jpg" alt="Soul Dog">
                     <div class="overlay">
                         <h3>Soul Dog</h3>
                     </div>
                 </div>
+
+                <!-- Commissioned Artwork -->
                 <div class="gallery-item" data-category="commission">
                     <img src="/images/The Daily Moo (Print).jpg" alt="The Daily Moo">
                     <div class="overlay">
@@ -77,10 +83,30 @@
                         <h3>The Industry</h3>
                     </div>
                 </div>
+
+                <!-- Print Artwork -->
                 <div class="gallery-item" data-category="print">
                     <img src="/images/Quiet Strength (Print).jpg" alt="Quiet Strength">
                     <div class="overlay">
                         <h3>Quiet Strength</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="print">
+                    <img src="/images/Baci Di Primavera (Print).jpg" alt="Baci Di Primavera">
+                    <div class="overlay">
+                        <h3>Baci Di Primavera</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="print">
+                    <img src="/images/Divine Nature (Print).jpg" alt="Divine Nature">
+                    <div class="overlay">
+                        <h3>Divine Nature</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="print">
+                    <img src="/images/Flowers Take Time To Bloom (Print).jpg" alt="Flowers Take Time To Bloom">
+                    <div class="overlay">
+                        <h3>Flowers Take Time To Bloom</h3>
                     </div>
                 </div>
                 <div class="gallery-item" data-category="print">
@@ -93,6 +119,12 @@
                     <img src="/images/Be Afraid To Stand Still (Print).jpg" alt="Be Afraid To Stand Still">
                     <div class="overlay">
                         <h3>Be Afraid To Stand Still</h3>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="print">
+                    <img src="/images/Ti Amo Di Piu (Print).jpg" alt="Ti Amo Di Piu">
+                    <div class="overlay">
+                        <h3>Ti Amo Di Piu</h3>
                     </div>
                 </div>
             </div>
@@ -139,6 +171,8 @@
         </div>
     </footer>
 
-    <script src="../js/script.js"></script>
+    <script src="../js/gallery.js"></script>
+    <script src="../js/cart.js"></script>
 </body>
+
 </html>

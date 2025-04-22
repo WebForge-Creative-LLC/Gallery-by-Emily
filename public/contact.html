@@ -29,8 +29,12 @@
                 <li><a href="shop.html">Shop</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="events.html">Events</a></li>
-                <li><a href="contact.html" class="active">Commission</a></li>
+                <li><a href="contact.html" class="active nav-btn">Commission</a></li>
             </ul>
+            <div class="cart-icon-container">
+                <div class="cart-icon">🛒</div>
+                <span class="cart-count">0</span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -86,8 +90,8 @@
                         <div class="commission-item">
                             <img src="/images/The Daily Moo (Print).jpg" alt="Custom Portrait">
                             <div class="commission-caption">
-                                <h3>The Daily Moo</h3>
-                                <p>Sold for:$150</p>
+                                <h3>The Daily Moo (Sold)</h3>
+                                <p>Sold for: $150</p>
                                 <p>Time: 11 HRS</p>
                             </div>
                         </div>
@@ -95,12 +99,12 @@
                             <img src="/images/The Industry.jpg" alt="Custom Landscape">
                             <div class="commission-caption">
                                 <h3>The Industry</h3>
-                                <p>Sold for: $500</p>
+                                <p>Price: $500</p>
                                 <p>Time: 17 HRS</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
 
         <section class="contact-form-section">
@@ -167,9 +171,9 @@
                     </div>
 
                     <div class="form-group full-width">
-                        <label>Reference Images</label>
+                        <label for="images">Reference Images</label>
                         <div class="file-upload">
-                            <input type="file" id="images" name="images" multiple>
+                            <input type="file" id="images" name="images" multiple title="Upload reference images">
                             <p class="form-help">Upload any reference images or inspiration. (Optional)</p>
                         </div>
                     </div>
@@ -220,7 +224,7 @@
             </div>
         </section>
     </main>
-    
+
     <footer>
         <div class="footer-content">
             <div class="footer-logo">
@@ -263,5 +267,7 @@
     </footer>
 
     <script src="../js/script.js"></script>
+    <script src="../js/cart.js"></script>
 </body>
+
 </html>

@@ -17,7 +17,7 @@
     <script>
         const stripePublicKey = 'pk_test_51RFk285TUO5rXThKiBmt6eyGdsPIwrArsMOmWPONsAN6qLvBbqRiQnDPU31Om43YmmO01r6l8nIqixbBH19UwCoJ00OJCwnMHz';
     </script>
-    <script src="script.js" defer></script>
+    <script src="../js/shop.js" defer></script>
 
 </head>
 
@@ -35,8 +35,12 @@
                 <li><a href="shop.html" class="active">Shop</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="events.html">Events</a></li>
-                <li><a href="contact.html">Commission</a></li>
+                <li><a href="contact.html" class="nav-btn">Commission</a></li>
             </ul>
+            <div class="cart-icon-container">
+                <div class="cart-icon">🛒</div>
+                <span class="cart-count">0</span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -49,7 +53,7 @@
         <section class="shop-hero">
             <div class="shop-hero-content">
                 <h1>Shop Prints</h1>
-                <p>Bring home a piece of vibrant, joyful art</p>
+                <p>Bring home a piece of vibrant, joyful art!</p>
                 <div class="print-psa">
                     <p>Please note: Colors may vary slightly in shades during the printing process.</p>
                 </div>
@@ -59,128 +63,157 @@
         <section class="shop-filters">
             <div class="filter-container">
                 <div class="search-filter">
-                    <input type="text" id="search-input" placeholder="Search artwork...">
+                    <input type="text" placeholder="Search artwork...">
                 </div>
                 <div class="category-filter">
-                    <select id="category-select" aria-label="Filter by category">
+                    <select aria-label="Filter by category">
                         <option value="all">All Categories</option>
-                        <option value="print">Print</option>
+                        <option value="print">Prints</option>
+                        <option value="original">Originals</option>
                     </select>
                 </div>
-                <div class="sort-filter">
-                    <select id="sort-select" aria-label="Sort by">
-                        <option value="featured">Featured</option>
-                        <option value="newest">Newest</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
+                <div class="featured-filter">
+                    <select aria-label="Filter by featured status">
+                        <option value="all">All Artwork</option>
+                        <option value="featured">Featured Prints</option>
+                        <option value="other">Other Artwork</option>
                     </select>
                 </div>
             </div>
         </section>
 
         <section class="shop-grid">
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-06-01">
+            <!-- Featured Prints -->
+            <div class="product-card" data-category="print" data-featured="true">
                 <div class="product-image">
-                    <img src="/images/Quiet Strength (Print).jpg" alt="Quiet Strength Print">
+                    <img src="/images/Quiet Strength (Print).jpg" alt="Quiet Strength">
                     <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
+                        <button class="btn quick-view-btn">Quick View</button>
                     </div>
                 </div>
                 <div class="product-info">
                     <h3>Quiet Strength</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RFmWK5TUO5rXThKCaMN0JRc">Add to Cart</button>
+                    <p class="price">$35.00</p>
+                    <p class="description">A serene and powerful print capturing the essence of inner strength. 10
+                        1/2(length) x 12 1/4(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
                 </div>
             </div>
 
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-05-20">
+            <div class="product-card" data-category="print" data-featured="true">
                 <div class="product-image">
-                    <img src="/images/Baci Di Primavera (Print).jpg" alt="Baci Di Primavera Print">
+                    <img src="/images/Blossoming Day Dream (Print).jpg" alt="Blossoming Day Dream">
                     <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3>Baci Di Primavera</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RFmUb5TUO5rXThKVGGfrY5o">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-09-05">
-                <div class="product-image">
-                    <img src="/images/Divine Nature (Print).jpg" alt="Divine Nature Print">
-                    <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3>Divine Nature</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RFmU45TUO5rXThKIubv0HRB">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-09-20">
-                <div class="product-image">
-                    <img src="/images/Flowers Take Time To Bloom (Print).jpg" alt="Flowers Take Time To Bloom Print">
-                    <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3>Flowers Take Time To Bloom</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RGAy35TUO5rXThK8Ja4Kw39">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-09-20">
-                <div class="product-image">
-                    <img src="/images/Blossoming Day Dream (Print).jpg" alt="Blossoming Day Dream Print">
-                    <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
+                        <button class="btn quick-view-btn">Quick View</button>
                     </div>
                 </div>
                 <div class="product-info">
                     <h3>Blossoming Day Dream</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RGAz65TUO5rXThKjyq6o4nk">Add to Cart</button>
+                    <p class="price">$35.00</p>
+                    <p class="description">A vibrant print celebrating the beauty of nature's awakening. 9 1/4(length) x
+                        10 1/4(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
                 </div>
             </div>
 
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-09-20">
+            <div class="product-card" data-category="print" data-featured="true">
                 <div class="product-image">
-                    <img src="/images/Be Afraid To Stand Still (Print).jpg" alt="Be Afraid To Stand Still Print">
+                    <img src="/images/Be Afraid To Stand Still (Print).jpg" alt="Be Afraid To Stand Still">
                     <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
+                        <button class="btn quick-view-btn">Quick View</button>
                     </div>
                 </div>
                 <div class="product-info">
                     <h3>Be Afraid To Stand Still</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RGB0D5TUO5rXThKeAeW1vpq">Add to Cart</button>
+                    <p class="price">$35.00</p>
+                    <p class="description">An inspiring print encouraging movement and growth. 11(length) x 15
+                        1/4(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
                 </div>
             </div>
 
-            <div class="product-card" data-category="print" data-price="35" data-date="2023-09-20">
+            <!-- Originals -->
+            <div class="product-card" data-category="original" data-featured="true">
                 <div class="product-image">
-                    <img src="/images/Ti Amo Di Piu (Print).jpg" alt="Ti Amo Di Piu Print">
+                    <img src="/images/The Industry.jpg" alt="The Industry">
                     <div class="product-overlay">
-                        <a href="#" class="btn btn-small">Quick View</a>
+                        <button class="btn quick-view-btn">Quick View</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>The Industry</h3>
+                    <p class="price">$500.00</p>
+                    <p class="description">A powerful print showcasing the beauty of industry.
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <!-- Other Prints -->
+            <div class="product-card" data-category="print" data-featured="false">
+                <div class="product-image">
+                    <img src="/images/Baci Di Primavera (Print).jpg" alt="Baci Di Primavera">
+                    <div class="product-overlay">
+                        <button class="btn quick-view-btn">Quick View</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Baci Di Primavera</h3>
+                    <p class="price">$35.00</p>
+                    <p class="description">A romantic print capturing spring's first kisses. 13 3/4(length) x 10
+                        1/2(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="print" data-featured="false">
+                <div class="product-image">
+                    <img src="/images/Divine Nature (Print).jpg" alt="Divine Nature">
+                    <div class="product-overlay">
+                        <button class="btn quick-view-btn">Quick View</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Divine Nature</h3>
+                    <p class="price">$35.00</p>
+                    <p class="description">A spiritual print connecting nature and divinity. 13 3/4(length) x 11(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="print" data-featured="false">
+                <div class="product-image">
+                    <img src="/images/Flowers Take Time To Bloom (Print).jpg" alt="Flowers Take Time To Bloom">
+                    <div class="product-overlay">
+                        <button class="btn quick-view-btn">Quick View</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3>Flowers Take Time To Bloom</h3>
+                    <p class="price">$35.00</p>
+                    <p class="description">A patient print celebrating nature's timing. 8 1/8(length) x 10 1/2(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="print" data-featured="false">
+                <div class="product-image">
+                    <img src="/images/Ti Amo Di Piu (Print).jpg" alt="Ti Amo Di Piu">
+                    <div class="product-overlay">
+                        <button class="btn quick-view-btn">Quick View</button>
                     </div>
                 </div>
                 <div class="product-info">
                     <h3>Ti Amo Di Piu</h3>
-                    <p class="product-category">Print</p>
-                    <p class="product-price">$35.00</p>
-                    <button class="btn add-to-cart" data-price-id="price_1RGB185TUO5rXThKTedDi6VA">Add to Cart</button>
+                    <p class="price">$35.00</p>
+                    <p class="description">A passionate print expressing deep love. 11 1/2(length) x 15 1/4(width)
+                    </p>
+                    <button class="btn add-to-cart">Add to Cart</button>
                 </div>
             </div>
         </section>
@@ -224,48 +257,51 @@
             </div>
         </div>
         <div class="cart-overlay"></div>
-    
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <a href="index.html">
-                    <img src="/images/Gallery by Emily Logo (Footer).png" alt="Gallery by Emily Logo"
-                        class="logo-small">
-                </a>
-            </div>
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="shop.html">Shop</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="events.html">Events</a></li>
-                    <li><a href="contact.html">Commission</a></li>
-                </ul>
-            </div>
-            <div class="footer-contact">
-                <h4>Contact</h4>
-                <p>Email: gallerybyemily@gmail.com</p>
-                <div class="social-icons">
-                    <a href="https://www.instagram.com/gallerybyemily/" target="_blank" rel="noopener"
-                        class="social-icon">Instagram</a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            <p>&copy; 2025 Gallery by Emily. All rights reserved.</p>
-            <div class="footer-logos">
-                <div class="webforge-logo">
-                    <a href="https://webforgecreativellc.com" target="_blank" rel="noopener">
-                        <img src="/images/Made by WebForge (Footer).png" alt="Made by WebForge" class="logo-small"
-                            style="width: 150px; height: auto;">
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">
+                        <img src="/images/Gallery by Emily Logo (Footer).png" alt="Gallery by Emily Logo"
+                            class="logo-small">
                     </a>
                 </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="events.html">Events</a></li>
+                        <li><a href="contact.html">Commission</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p>Email: gallerybyemily@gmail.com</p>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/gallerybyemily/" target="_blank" rel="noopener"
+                            class="social-icon">Instagram</a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </footer>
+            <div class="copyright">
+                <p>&copy; 2025 Gallery by Emily. All rights reserved.</p>
+                <div class="footer-logos">
+                    <div class="webforge-logo">
+                        <a href="https://webforgecreativellc.com" target="_blank" rel="noopener">
+                            <img src="/images/Made by WebForge (Footer).png" alt="Made by WebForge" class="logo-small"
+                                style="width: 150px; height: auto;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
 
-    <script src="../js/script.js"></script>
+        <script src="../js/script.js"></script>
+        <script src="../js/shop.js"></script>
+        <script src="../js/cart.js"></script>
 </body>
+
 </html>
