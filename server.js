@@ -14,11 +14,11 @@ const connectedAccountId = process.env.CLIENT_STRIPE_ACCOUNT;
 app.use(cors());
 app.use(express.json());
 
-// ✅ Serve Static Frontend
+// ✅ Serve static frontend files
 const publicPath = path.resolve(__dirname, 'public');
 app.use(express.static(publicPath));
 
-// ✅ Stripe Checkout Session
+// ✅ Stripe checkout session
 app.post('/create-checkout-session', async (req, res) => {
   const items = req.body.items;
 
@@ -49,21 +49,11 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// ✅ Brevo Email Sending
+// ✅ Brevo Email sending
 app.post('/send-email', async (req, res) => {
-  const {
-    name,
-    email,
-    phone,
-    artworkType,
-    size,
-    budget,
-    deadline,
-    description,
-    howFound
-  } = req.body;
+  const { name, email, message } = req.body;
 
-  if (!name || !email || !description) {
+  if (!name || !email || !message) {
     return res.status(400).json({ error: "Required fields are missing." });
   }
 
@@ -77,19 +67,12 @@ app.post('/send-email', async (req, res) => {
         email: "kevinhanson2027@gmail.com",
         name: "Kevin Hanson"
       }],
-      subject: `🎨 New Commission Request from ${name}`,
+      subject: `🎨 New Contact Form Submission from ${name}`,
       htmlContent: `
-        <h2>New Commission Inquiry</h2>
+        <h2>New Message from Gallery by Emily</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-        <p><strong>Artwork Type:</strong> ${artworkType || 'Not specified'}</p>
-        <p><strong>Preferred Size:</strong> ${size || 'Not specified'}</p>
-        <p><strong>Budget:</strong> ${budget || 'Not specified'}</p>
-        <p><strong>Deadline:</strong> ${deadline || 'Not specified'}</p>
-        <p><strong>How Found:</strong> ${howFound || 'Not specified'}</p>
-        <h3>Description:</h3>
-        <p>${description}</p>
+        <p><strong>Message:</strong> ${message}</p>
       `
     }, {
       headers: {
@@ -105,12 +88,12 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
-// ✅ Fallback Route (important for static files!)
+// ✅ Fallback route for React/HTML frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-// ✅ Port
+// ✅ Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
