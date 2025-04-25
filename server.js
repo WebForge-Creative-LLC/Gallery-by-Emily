@@ -103,7 +103,7 @@ app.post('/send-email', async (req, res) => {
 });
 
 // ✅ Fallback Route for React Router Single Page Apps (optional)
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
