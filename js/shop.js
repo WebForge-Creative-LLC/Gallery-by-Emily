@@ -1,27 +1,19 @@
+// shop.js
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('.search-filter input');
     const categorySelect = document.querySelector('.category-filter select');
     const featuredSelect = document.querySelector('.featured-filter select');
     const productCards = document.querySelectorAll('.product-card');
-    const addToCartButtons = document.querySelectorAll('.add-to-cart');
     const cartSidebar = document.querySelector('.cart-sidebar');
     const cartOverlay = document.querySelector('.cart-overlay');
     const closeCartButton = document.querySelector('.close-cart');
     const cartItems = document.querySelector('.cart-items');
     const cartTotalAmount = document.getElementById('cart-total-amount');
     const checkoutButton = document.querySelector('.checkout-btn');
-    const quickViewButtons = document.querySelectorAll('.quick-view-btn');
     const cartIconContainer = document.querySelector('.cart-icon-container');
     const cartCount = document.querySelector('.cart-count');
 
     let cart = [];
-
-    // Featured products
-    const featuredProducts = [
-        'Quiet Strength',
-        'Blossoming Day Dream',
-        'Be Afraid To Stand Still'
-    ];
 
     function filterProducts() {
         const searchTerm = searchInput.value.toLowerCase();
@@ -33,18 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const category = card.getAttribute('data-category');
             const isFeatured = card.getAttribute('data-featured') === 'true';
 
-            // Check if product matches all criteria
             const matchesSearch = title.includes(searchTerm);
             const matchesCategory = selectedCategory === 'all' || category === selectedCategory;
             const matchesFeatured = selectedFeatured === 'all' ||
                 (selectedFeatured === 'featured' && isFeatured) ||
                 (selectedFeatured === 'other' && !isFeatured);
 
-            if (matchesSearch && matchesCategory && matchesFeatured) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = (matchesSearch && matchesCategory && matchesFeatured) ? 'block' : 'none';
         });
     }
 
@@ -67,12 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCart() {
         cartItems.innerHTML = '';
 
-        if (!cart || cart.length === 0) {
+        if (cart.length === 0) {
             cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
             cartTotalAmount.textContent = '$0.00';
             cartCount.textContent = '0';
-
-            // Save empty cart to localStorage
             localStorage.setItem('cart', JSON.stringify([]));
             return;
         }
@@ -81,226 +66,86 @@ document.addEventListener('DOMContentLoaded', () => {
         let itemCount = 0;
 
         cart.forEach((item, index) => {
-            // Skip invalid items
-            if (!item || !item.title || !item.price) {
-                return;
-            }
+            total += item.price * item.quantity;
+            itemCount += item.quantity;
 
-            const itemPrice = item.price || 0;
-            const itemQuantity = item.quantity || 1;
-
-            total += itemPrice * itemQuantity;
-            itemCount += itemQuantity;
-
-            const cartItemElement = document.createElement('div');
-            cartItemElement.classList.add('cart-item');
-            cartItemElement.innerHTML = `
-                <img src="${item.image || ''}" alt="${item.title}" class="cart-item-image">
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
+            cartItem.innerHTML = `
+                <img src="${item.image}" alt="${item.title}" class="cart-item-image">
                 <div class="cart-item-details">
-                    <h4 class="cart-item-title">${item.title}</h4>
-                    <p class="cart-item-price">$${itemPrice.toFixed(2)}</p>
+                    <h4>${item.title}</h4>
+                    <p>$${item.price.toFixed(2)}</p>
                     <div class="cart-item-quantity">
                         <button class="quantity-btn decrease">-</button>
-                        <span>${itemQuantity}</span>
+                        <span>${item.quantity}</span>
                         <button class="quantity-btn increase">+</button>
                     </div>
                 </div>
                 <button class="cart-item-remove" data-index="${index}">Remove</button>
             `;
 
-            cartItems.appendChild(cartItemElement);
-
-            cartItemElement.querySelector('.decrease').addEventListener('click', () => {
-                if (item.quantity > 1) {
-                    item.quantity--;
-                    updateCart();
-
-                    // Save updated cart to localStorage
-                    localStorage.setItem('cart', JSON.stringify(cart));
+            cartItem.querySelector('.decrease').addEventListener('click', () => {
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity--;
+                } else {
+                    cart.splice(index, 1);
                 }
-            });
-
-            cartItemElement.querySelector('.increase').addEventListener('click', () => {
-                item.quantity++;
+                saveCart();
                 updateCart();
-
-                // Save updated cart to localStorage
-                localStorage.setItem('cart', JSON.stringify(cart));
             });
 
-            cartItemElement.querySelector('.cart-item-remove').addEventListener('click', () => {
+            cartItem.querySelector('.increase').addEventListener('click', () => {
+                cart[index].quantity++;
+                saveCart();
+                updateCart();
+            });
+
+            cartItem.querySelector('.cart-item-remove').addEventListener('click', () => {
                 cart.splice(index, 1);
+                saveCart();
                 updateCart();
-
-                // Save updated cart to localStorage
-                localStorage.setItem('cart', JSON.stringify(cart));
             });
+
+            cartItems.appendChild(cartItem);
         });
 
         cartTotalAmount.textContent = `$${total.toFixed(2)}`;
         cartCount.textContent = itemCount.toString();
     }
 
-    // Click on cart icon to open cart
-    if (cartIconContainer) {
-        cartIconContainer.addEventListener('click', openCart);
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    // Set data-price attribute for product cards
-    productCards.forEach(card => {
-        const priceText = card.querySelector('.price').textContent;
-        const price = parseFloat(priceText.replace('$', ''));
-        card.setAttribute('data-price', price);
-    });
+    // ADD TO CART
+    window.addToCart = function (priceId) {
+        const card = [...document.querySelectorAll('.product-card')]
+            .find(card => card.querySelector('button[onclick*="' + priceId + '"]'));
 
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const productCard = button.closest('.product-card');
-            const title = productCard.querySelector('h3').textContent;
-            const price = parseFloat(productCard.getAttribute('data-price'));
-            const image = productCard.querySelector('img').src;
-            const priceId = button.getAttribute('data-price-id');
+        if (!card) return;
 
-            const existingItemIndex = cart.findIndex(item => item.title === title);
+        const title = card.querySelector('h3').textContent;
+        const price = parseFloat(card.querySelector('.price').textContent.replace('$', ''));
+        const image = card.querySelector('img').src;
 
-            if (existingItemIndex !== -1) {
-                cart[existingItemIndex].quantity++;
-            } else {
-                cart.push({ title, price, image, quantity: 1, priceId });
-            }
-
-            updateCart();
-            openCart();
-
-            button.textContent = 'Added!';
-            button.style.backgroundColor = 'var(--success-color)';
-            setTimeout(() => {
-                button.textContent = 'Add to Cart';
-                button.style.backgroundColor = '';
-            }, 1500);
-        });
-    });
-
-    // Function to add to cart from any page
-    window.addToCart = function (title, price, image, priceId) {
-        const existingItemIndex = cart.findIndex(item => item.title === title);
-
-        if (existingItemIndex !== -1) {
-            cart[existingItemIndex].quantity++;
+        const existing = cart.find(item => item.priceId === priceId);
+        if (existing) {
+            existing.quantity++;
         } else {
-            cart.push({ title, price, image, quantity: 1, priceId });
+            cart.push({ priceId, title, price, image, quantity: 1 });
         }
 
+        saveCart();
         updateCart();
         openCart();
-
-        // Save cart to localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
     };
 
-    // Load cart from localStorage on page load
-    try {
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-            cart = JSON.parse(savedCart);
-
-            // Filter out invalid items
-            cart = cart.filter(item => item && item.title && item.price);
-
-            if (!Array.isArray(cart)) {
-                cart = [];
-            }
-        } else {
-            cart = [];
-        }
-    } catch (error) {
-        console.error('Error loading cart:', error);
-        cart = [];
-    }
-
-    // Initialize cart
-    updateCart();
-
-    cartOverlay.addEventListener('click', closeCart);
-    closeCartButton.addEventListener('click', closeCart);
-
-    // Initialize quick view functionality
-    const quickViewModal = document.createElement('div');
-    quickViewModal.className = 'quick-view-modal';
-    document.body.appendChild(quickViewModal);
-
-    quickViewButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const productCard = button.closest('.product-card');
-            const productImage = productCard.querySelector('img').src;
-            const productTitle = productCard.querySelector('h3').textContent;
-            const productPrice = productCard.querySelector('.price').textContent;
-            const productDescription = productCard.querySelector('.description').textContent;
-
-            quickViewModal.innerHTML = `
-                <div class="quick-view-content">
-                    <div class="quick-view-image">
-                        <img src="${productImage}" alt="${productTitle}" id="quick-view-img">
-                    </div>
-                    <div class="quick-view-details">
-                        <h2>${productTitle}</h2>
-                        <p class="price">${productPrice}</p>
-                        <p class="description">${productDescription}</p>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                    <span class="quick-view-close">&times;</span>
-                </div>
-            `;
-
-            quickViewModal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-
-            // Initialize zoom functionality
-            const quickViewImg = document.getElementById('quick-view-img');
-            let isZoomed = false;
-
-            quickViewImg.addEventListener('click', () => {
-                if (!isZoomed) {
-                    quickViewImg.style.transform = 'scale(2)';
-                    quickViewImg.style.cursor = 'zoom-out';
-                    isZoomed = true;
-                } else {
-                    quickViewImg.style.transform = 'scale(1)';
-                    quickViewImg.style.cursor = 'zoom-in';
-                    isZoomed = false;
-                }
-            });
-
-            // Close modal functionality
-            const closeBtn = quickViewModal.querySelector('.quick-view-close');
-            closeBtn.addEventListener('click', () => {
-                quickViewModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-
-            quickViewModal.addEventListener('click', (e) => {
-                if (e.target === quickViewModal) {
-                    quickViewModal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }
-            });
-
-            // Add to cart from quick view
-            const addToCartBtn = quickViewModal.querySelector('.add-to-cart');
-            addToCartBtn.addEventListener('click', () => {
-                const priceValue = parseFloat(productPrice.replace('$', ''));
-                addToCart(productTitle, priceValue, productImage);
-                quickViewModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-        });
-    });
-
+    // Checkout
     if (checkoutButton) {
         checkoutButton.addEventListener('click', async () => {
             if (cart.length === 0) {
-                alert('Your cart is empty. Add some items before checking out.');
+                alert('Your cart is empty.');
                 return;
             }
 
@@ -308,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutButton.textContent = 'Processing...';
 
             try {
-                const res = await fetch('https://test-1-5w0d.onrender.com/create-checkout-session', {
+                const response = await fetch('/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -316,22 +161,34 @@ document.addEventListener('DOMContentLoaded', () => {
                             priceId: item.priceId,
                             quantity: item.quantity
                         }))
-                    })
+                    }),
                 });
 
-                const data = await res.json();
-
+                const data = await response.json();
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error('Checkout failed');
+                    throw new Error('Checkout failed.');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                alert('There was a problem processing your payment. Please try again.');
+                console.error('Checkout Error:', error);
+                alert('Checkout failed. Please try again.');
                 checkoutButton.disabled = false;
                 checkoutButton.textContent = 'Checkout';
             }
         });
     }
+
+    // Initialize
+    try {
+        const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = savedCart;
+        updateCart();
+    } catch (error) {
+        console.error('Error loading saved cart:', error);
+        cart = [];
+    }
+
+    cartOverlay.addEventListener('click', closeCart);
+    closeCartButton.addEventListener('click', closeCart);
 });

@@ -3,11 +3,12 @@ const Stripe = require('stripe');
 const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
-const app = express();
-
 require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+const app = express();
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const brevoApiKey = process.env.BREVO_API_KEY;
+const connectedAccountId = process.env.CLIENT_STRIPE_ACCOUNT;
 
 // ✅ Middleware
 app.use(cors());
@@ -32,8 +33,10 @@ app.post('/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       mode: 'payment',
       line_items,
-      success_url: 'https://www.gallerybyemily.com/success.html',
-      cancel_url: 'https://www.gallerybyemily.com/shop.html',
+      success_url: `${process.env.CLIENT_URL}/thank-you.html`,
+      cancel_url: `${process.env.CLIENT_URL}/shop.html`,
+    }, {
+      stripeAccount: connectedAccountId, // 🧠 This makes payment go to client's account
     });
 
     res.json({ url: session.url });
