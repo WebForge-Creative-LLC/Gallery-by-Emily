@@ -103,9 +103,12 @@ app.post('/send-email', async (req, res) => {
 });
 
 // ✅ Fallback Route for React Router Single Page Apps (optional)
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+const publicPath = path.join(__dirname, 'public');
+
+app.get('*', (req, res) => {
+  res.sendFile('index.html', { root: publicPath });
 });
+
 
 // ✅ Port Setup
 const PORT = process.env.PORT || 3000;
