@@ -13,9 +13,12 @@ const connectedAccountId = process.env.CLIENT_STRIPE_ACCOUNT;
 // ✅ Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ Stripe Checkout Session Route
+// ✅ Serve Static Frontend
+const publicPath = path.resolve(__dirname, 'public');
+app.use(express.static(publicPath));
+
+// ✅ Stripe Checkout Session
 app.post('/create-checkout-session', async (req, res) => {
   const items = req.body.items;
 
@@ -46,7 +49,7 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// ✅ Brevo Email Contact Route for Commission Form
+// ✅ Brevo Email Sending
 app.post('/send-email', async (req, res) => {
   const {
     name,
@@ -68,10 +71,10 @@ app.post('/send-email', async (req, res) => {
     await axios.post('https://api.brevo.com/v3/smtp/email', {
       sender: {
         name: "Gallery by Emily Website",
-        email: "webforgecreativellc@gmail.com" // Sending email (must match a Brevo validated sender)
+        email: "webforgecreativellc@gmail.com"
       },
       to: [{
-        email: "kevinhanson2027@gmail.com", // ✅ Hardcoded final recipient
+        email: "kevinhanson2027@gmail.com",
         name: "Kevin Hanson"
       }],
       subject: `🎨 New Commission Request from ${name}`,
@@ -102,15 +105,12 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
-// ✅ Fallback Route for React Router Single Page Apps (optional)
-const publicPath = path.join(__dirname, 'public');
-
+// ✅ Fallback Route (important for static files!)
 app.get('*', (req, res) => {
-  res.sendFile('index.html', { root: publicPath });
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-
-// ✅ Port Setup
+// ✅ Port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
