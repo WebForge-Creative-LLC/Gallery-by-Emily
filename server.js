@@ -13,9 +13,9 @@ const connectedAccountId = process.env.CLIENT_STRIPE_ACCOUNT;
 // ✅ Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static frontend files
+app.use(express.static(path.join(__dirname, 'public')));
 
-// ✅ Stripe Checkout session route
+// ✅ Stripe Checkout Session Route
 app.post('/create-checkout-session', async (req, res) => {
   const items = req.body.items;
 
@@ -36,40 +36,57 @@ app.post('/create-checkout-session', async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/thank-you.html`,
       cancel_url: `${process.env.CLIENT_URL}/shop.html`,
     }, {
-      stripeAccount: connectedAccountId, // 🧠 This makes payment go to client's account
+      stripeAccount: connectedAccountId,
     });
 
     res.json({ url: session.url });
   } catch (err) {
-    console.error("❌ Stripe Error:", err.message);
+    console.error("❌ Stripe Checkout Error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ Brevo Email contact route
+// ✅ Brevo Email Contact Route for Commission Form
 app.post('/send-email', async (req, res) => {
-  const { name, email, message } = req.body;
+  const {
+    name,
+    email,
+    phone,
+    artworkType,
+    size,
+    budget,
+    deadline,
+    description,
+    howFound
+  } = req.body;
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "All fields are required." });
+  if (!name || !email || !description) {
+    return res.status(400).json({ error: "Required fields are missing." });
   }
 
   try {
     await axios.post('https://api.brevo.com/v3/smtp/email', {
       sender: {
-        name: "WebForge Creative Contact Form",
-        email: "webforgecreativellc@gmail.com"
+        name: "Gallery by Emily Website",
+        email: "webforgecreativellc@gmail.com" // Sending email (must match a Brevo validated sender)
       },
       to: [{
-        email: "kevinhanson2027@gmail.com",
-        name: "Client"
+        email: "kevinhanson2027@gmail.com", // ✅ Hardcoded final recipient
+        name: "Kevin Hanson"
       }],
-      subject: `New Contact Form Submission from ${name}`,
+      subject: `🎨 New Commission Request from ${name}`,
       htmlContent: `
-        <h2>New Contact Message</h2>
+        <h2>New Commission Inquiry</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong><br>${message}</p>
+        <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
+        <p><strong>Artwork Type:</strong> ${artworkType || 'Not specified'}</p>
+        <p><strong>Preferred Size:</strong> ${size || 'Not specified'}</p>
+        <p><strong>Budget:</strong> ${budget || 'Not specified'}</p>
+        <p><strong>Deadline:</strong> ${deadline || 'Not specified'}</p>
+        <p><strong>How Found:</strong> ${howFound || 'Not specified'}</p>
+        <h3>Description:</h3>
+        <p>${description}</p>
       `
     }, {
       headers: {
@@ -85,12 +102,12 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
-// ✅ Fallback route
-app.get('/', (req, res) => {
+// ✅ Fallback Route for React Router Single Page Apps (optional)
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ✅ Port setup for Render
+// ✅ Port Setup
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
