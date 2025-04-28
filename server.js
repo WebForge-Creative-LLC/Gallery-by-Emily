@@ -55,8 +55,8 @@ app.post('/create-checkout-session', async (req, res) => {
 
     res.json({ url: session.url });
   } catch (err) {
-    console.error('Stripe error →', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Stripe error →', err.response?.data || err.message || err);
+    res.status(500).json({ error: err.message || 'Unknown Stripe error' });
   }
 });
 
