@@ -1,11 +1,12 @@
-import express from 'express';
-import Stripe from 'stripe';
-import cors from 'cors';
-import path from 'path';
-import dotenv from 'dotenv';
-import axios from 'axios';
+const express = require('express');
+const Stripe = require('stripe');
+const cors = require('cors');
+const path = require('path');
+const dotenv = require('dotenv');
+const axios = require('axios');
 
 dotenv.config();
+
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16'
