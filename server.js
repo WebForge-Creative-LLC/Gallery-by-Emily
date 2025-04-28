@@ -1,100 +1,88 @@
-const express = require('express');
-const Stripe = require('stripe');
-const cors = require('cors');
-const path = require('path');
-const axios = require('axios');
-require('dotenv').config();
+import express from 'express';
+import Stripe from 'stripe';
+import cors from 'cors';
+import path from 'path';
+import dotenv from 'dotenv';
+import axios from 'axios';
 
+dotenv.config();
 const app = express();
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const brevoApiKey = process.env.BREVO_API_KEY;
-const connectedAccountId = process.env.CLIENT_STRIPE_ACCOUNT;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16'
+});
 
-// ✅ Middleware
-app.use(cors());
+// ───────────────────────────── MIDDLEWARE
+app.use(cors({
+  origin: process.env.DOMAIN
+}));
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), 'public')));
 
-// ✅ Serve static frontend files
-const publicPath = path.resolve(__dirname, 'public');
-app.use(express.static(publicPath));
-
-// ✅ Stripe checkout session
+// ───────────────────────────── STRIPE CHECKOUT
 app.post('/create-checkout-session', async (req, res) => {
-  const items = req.body.items;
+  const { items } = req.body;
 
-  if (!items || items.length === 0) {
-    return res.status(400).json({ error: "No items in cart" });
+  if (!items || Object.keys(items).length === 0) {
+    return res.status(400).json({ error: 'Cart is empty' });
   }
 
-  const line_items = items.map(item => ({
-    price: item.priceId,
-    quantity: item.quantity,
+  const line_items = Object.entries(items).map(([price, quantity]) => ({
+    price,
+    quantity
   }));
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items,
-      success_url: `${process.env.CLIENT_URL}/thank-you.html`,
-      cancel_url: `${process.env.CLIENT_URL}/shop.html`,
-    }, {
-      stripeAccount: connectedAccountId,
-    });
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: 'payment',
+        payment_method_types: ['card'],
+        line_items,
+        success_url: `${process.env.DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.DOMAIN}/cart.html`,
+        payment_intent_data: {
+          transfer_data: {
+            destination: process.env.CLIENT_CONNECT_ACCOUNT
+          }
+        }
+      },
+      {
+        stripeAccount: process.env.CLIENT_CONNECT_ACCOUNT
+      }
+    );
 
     res.json({ url: session.url });
   } catch (err) {
-    console.error("❌ Stripe Checkout Error:", err.message);
+    console.error('Stripe error →', err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ✅ Brevo Email sending
+// ───────────────────────────── BREVO EMAIL
 app.post('/send-email', async (req, res) => {
   const { name, email, message } = req.body;
-
   if (!name || !email || !message) {
-    return res.status(400).json({ error: "Required fields are missing." });
+    return res.status(400).json({ error: 'All fields are required.' });
   }
 
   try {
-    await axios.post('https://api.brevo.com/v3/smtp/email', {
-      sender: {
-        name: "Gallery by Emily Website",
-        email: "webforgecreativellc@gmail.com"
+    await axios.post(
+      'https://api.brevo.com/v3/smtp/email',
+      {
+        sender: { name: "Gallery by Emily Contact Form", email: "webforgecreativellc@gmail.com" },
+        to: [{ email: 'webforgecreativellc@gmail.com', name: 'Gallery by Emily' }],
+        replyTo: { email, name },
+        subject: `Website inquiry from ${name}`,
+        htmlContent: `<p>${message}</p>`
       },
-      to: [{
-        email: "kevinhanson2027@gmail.com",
-        name: "Kevin Hanson"
-      }],
-      subject: `🎨 New Contact Form Submission from ${name}`,
-      htmlContent: `
-        <h2>New Message from Gallery by Emily</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong> ${message}</p>
-      `
-    }, {
-      headers: {
-        'api-key': brevoApiKey,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    res.json({ message: '✅ Message sent successfully!' });
+      { headers: { 'api-key': process.env.BREVO_API_KEY } }
+    );
+    res.json({ message: 'Message sent ✔️' });
   } catch (err) {
-    console.error("❌ Brevo Email Error:", err.response?.data || err.message);
-    res.status(500).json({ error: 'Email sending failed.' });
+    console.error('Brevo error →', err.response?.data || err.message);
+    res.status(500).json({ error: 'Email failed.' });
   }
 });
 
-// ✅ Fallback route for React/HTML frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
-});
-
-// ✅ Start server
+// ───────────────────────────── SERVER START
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
