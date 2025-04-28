@@ -5,8 +5,10 @@ const path = require('path');
 const dotenv = require('dotenv');
 const axios = require('axios');
 
+// ───────────────────────────── LOAD ENVIRONMENT VARIABLES
 dotenv.config();
 
+// ───────────────────────────── APP SETUP
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16'
@@ -58,9 +60,10 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// ───────────────────────────── BREVO EMAIL
+// ───────────────────────────── BREVO EMAIL HANDLER
 app.post('/send-email', async (req, res) => {
   const { name, email, message } = req.body;
+
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
@@ -69,7 +72,7 @@ app.post('/send-email', async (req, res) => {
     await axios.post(
       'https://api.brevo.com/v3/smtp/email',
       {
-        sender: { name: "Gallery by Emily Contact Form", email: "webforgecreativellc@gmail.com" },
+        sender: { name: 'Gallery by Emily Contact Form', email: 'webforgecreativellc@gmail.com' },
         to: [{ email: 'webforgecreativellc@gmail.com', name: 'Gallery by Emily' }],
         replyTo: { email, name },
         subject: `Website inquiry from ${name}`,
