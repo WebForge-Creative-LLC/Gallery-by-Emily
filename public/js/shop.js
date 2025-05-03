@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let cart = [];
 
-    // Featured products
     const featuredProducts = [
         'Quiet Strength',
         'Blossoming Day Dream',
@@ -33,18 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const category = card.getAttribute('data-category');
             const isFeatured = card.getAttribute('data-featured') === 'true';
 
-            // Check if product matches all criteria
             const matchesSearch = title.includes(searchTerm);
             const matchesCategory = selectedCategory === 'all' || category === selectedCategory;
             const matchesFeatured = selectedFeatured === 'all' ||
                 (selectedFeatured === 'featured' && isFeatured) ||
                 (selectedFeatured === 'other' && !isFeatured);
 
-            if (matchesSearch && matchesCategory && matchesFeatured) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = matchesSearch && matchesCategory && matchesFeatured ? 'block' : 'none';
         });
     }
 
@@ -71,8 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
             cartItems.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
             cartTotalAmount.textContent = '$0.00';
             cartCount.textContent = '0';
-
-            // Save empty cart to localStorage
             localStorage.setItem('cart', JSON.stringify([]));
             return;
         }
@@ -81,13 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let itemCount = 0;
 
         cart.forEach((item, index) => {
-            // Skip invalid items
-            if (!item || !item.title || !item.price) {
-                return;
-            }
+            if (!item || !item.title || !item.price) return;
 
-            const itemPrice = item.price || 0;
-            const itemQuantity = item.quantity || 1;
+            const itemPrice = item.price;
+            const itemQuantity = item.quantity;
 
             total += itemPrice * itemQuantity;
             itemCount += itemQuantity;
@@ -95,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cartItemElement = document.createElement('div');
             cartItemElement.classList.add('cart-item');
             cartItemElement.innerHTML = `
-                <img src="${item.image || ''}" alt="${item.title}" class="cart-item-image">
+                <img src="${item.image}" alt="${item.title}" class="cart-item-image">
                 <div class="cart-item-details">
                     <h4 class="cart-item-title">${item.title}</h4>
                     <p class="cart-item-price">$${itemPrice.toFixed(2)}</p>
@@ -114,8 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (item.quantity > 1) {
                     item.quantity--;
                     updateCart();
-
-                    // Save updated cart to localStorage
                     localStorage.setItem('cart', JSON.stringify(cart));
                 }
             });
@@ -123,16 +110,12 @@ document.addEventListener('DOMContentLoaded', () => {
             cartItemElement.querySelector('.increase').addEventListener('click', () => {
                 item.quantity++;
                 updateCart();
-
-                // Save updated cart to localStorage
                 localStorage.setItem('cart', JSON.stringify(cart));
             });
 
             cartItemElement.querySelector('.cart-item-remove').addEventListener('click', () => {
                 cart.splice(index, 1);
                 updateCart();
-
-                // Save updated cart to localStorage
                 localStorage.setItem('cart', JSON.stringify(cart));
             });
         });
@@ -141,12 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cartCount.textContent = itemCount.toString();
     }
 
-    // Click on cart icon to open cart
     if (cartIconContainer) {
         cartIconContainer.addEventListener('click', openCart);
     }
 
-    // Set data-price attribute for product cards
     productCards.forEach(card => {
         const priceText = card.querySelector('.price').textContent;
         const price = parseFloat(priceText.replace('$', ''));
@@ -177,8 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateCart();
             openCart();
-
-            // Save cart to localStorage
             localStorage.setItem('cart', JSON.stringify(cart));
 
             button.textContent = 'Added!';
@@ -190,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Function to add to cart from any page
     window.addToCart = function (title, price, image, priceId) {
         const existingItemIndex = cart.findIndex(item => item.title === title);
 
@@ -202,23 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateCart();
         openCart();
-
-        // Save cart to localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
     };
 
-    // Load cart from localStorage on page load
     try {
         const savedCart = localStorage.getItem('cart');
         if (savedCart) {
             cart = JSON.parse(savedCart);
-
-            // Filter out invalid items
             cart = cart.filter(item => item && item.title && item.price);
-
-            if (!Array.isArray(cart)) {
-                cart = [];
-            }
+            if (!Array.isArray(cart)) cart = [];
         } else {
             cart = [];
         }
@@ -227,13 +197,11 @@ document.addEventListener('DOMContentLoaded', () => {
         cart = [];
     }
 
-    // Initialize cart
     updateCart();
 
     cartOverlay.addEventListener('click', closeCart);
     closeCartButton.addEventListener('click', closeCart);
 
-    // Initialize quick view functionality
     const quickViewModal = document.createElement('div');
     quickViewModal.className = 'quick-view-modal';
     document.body.appendChild(quickViewModal);
@@ -266,23 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
             quickViewModal.style.display = 'block';
             document.body.style.overflow = 'hidden';
 
-            // Initialize zoom functionality
             const quickViewImg = document.getElementById('quick-view-img');
             let isZoomed = false;
 
             quickViewImg.addEventListener('click', () => {
-                if (!isZoomed) {
-                    quickViewImg.style.transform = 'scale(2)';
-                    quickViewImg.style.cursor = 'zoom-out';
-                    isZoomed = true;
-                } else {
-                    quickViewImg.style.transform = 'scale(1)';
-                    quickViewImg.style.cursor = 'zoom-in';
-                    isZoomed = false;
-                }
+                quickViewImg.style.transform = isZoomed ? 'scale(1)' : 'scale(2)';
+                quickViewImg.style.cursor = isZoomed ? 'zoom-in' : 'zoom-out';
+                isZoomed = !isZoomed;
             });
 
-            // Close modal functionality
             const closeBtn = quickViewModal.querySelector('.quick-view-close');
             closeBtn.addEventListener('click', () => {
                 quickViewModal.style.display = 'none';
@@ -296,15 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Add to cart from quick view
             const addToCartBtn = quickViewModal.querySelector('.add-to-cart');
             addToCartBtn.addEventListener('click', () => {
                 const priceValue = parseFloat(productPrice.replace('$', ''));
                 const itemPriceId = addToCartBtn.getAttribute('data-price-id');
-
-                // Call global addToCart function with all parameters including priceId
                 window.addToCart(productTitle, priceValue, productImage, itemPriceId);
-
                 quickViewModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
             });
@@ -322,23 +278,19 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutButton.textContent = 'Processing...';
 
             try {
-                // Check if items have price IDs
-                const itemsForCheckout = cart.map(item => {
-                    return {
-                        priceId: item.priceId,
-                        quantity: item.quantity
-                    };
+                const itemsForCheckout = {};
+                cart.forEach(item => {
+                    if (item.priceId && item.quantity) {
+                        itemsForCheckout[item.priceId] = item.quantity;
+                    }
                 });
 
-                // Log for debugging
                 console.log('Checkout items:', itemsForCheckout);
 
                 const res = await fetch('/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        items: itemsForCheckout
-                    })
+                    body: JSON.stringify({ items: itemsForCheckout })
                 });
 
                 const data = await res.json();
