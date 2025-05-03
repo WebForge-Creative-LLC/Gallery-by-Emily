@@ -31,8 +31,8 @@ app.post('/create-checkout-session', async (req, res) => {
 
   const line_items = Object.entries(items).map(([price, quantity]) => ({
     price,
-    quantity
-  }));
+    quantity: Number(quantity),
+  }));  
 
   try {
     const session = await stripe.checkout.sessions.create({
