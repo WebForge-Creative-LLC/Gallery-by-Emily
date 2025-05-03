@@ -35,17 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".nav-menu");
 
-  hamburger.addEventListener("click", () => {
-    hamburger.classList.toggle("active");
-    navMenu.classList.toggle("active");
-  });
-
-  document.querySelectorAll(".nav-menu a").forEach((link) => {
-    link.addEventListener("click", () => {
-      hamburger.classList.remove("active");
-      navMenu.classList.remove("active");
+  if (hamburger && navMenu) {
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("active");
+      navMenu.classList.toggle("active");
     });
-  });
+
+    document.querySelectorAll(".nav-menu a").forEach((link) => {
+      link.addEventListener("click", () => {
+        hamburger.classList.remove("active");
+        navMenu.classList.remove("active");
+      });
+    });
+  }
 });
 
 // ---------------------------
@@ -87,16 +89,19 @@ window.addEventListener("scroll", () => {
 // ---------------------------
 // ✉️ Contact Form w/ EmailJS
 // ---------------------------
-document.getElementById("contact-form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  emailjs
-    .sendForm("service_61l9a3d", "template_0zqk2c8", this)
-    .then(() => {
-      alert("Message sent!");
-      this.reset();
-    })
-    .catch((error) => {
-      console.error("FAILED...", error);
-      alert("Error sending message.");
-    });
-});
+const contactForm = document.getElementById("contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    emailjs
+      .sendForm("service_61l9a3d", "template_0zqk2c8", this)
+      .then(() => {
+        alert("Message sent!");
+        this.reset();
+      })
+      .catch((error) => {
+        console.error("FAILED...", error);
+        alert("Error sending message.");
+      });
+  });
+}
