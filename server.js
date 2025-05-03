@@ -30,11 +30,15 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 
   const line_items = Object.entries(items)
-  .filter(([price, quantity]) => price && !isNaN(quantity))  // 👈 ensure valid data
-  .map(([price, quantity]) => ({
-    price,
-    quantity: Number(quantity)
-  }));
+    .filter(([price, quantity]) => price && !isNaN(quantity) && Number(quantity) > 0)
+    .map(([price, quantity]) => ({
+      price,
+      quantity: Number(quantity)
+    }));
+
+  if (line_items.length === 0) {
+    return res.status(400).json({ error: 'No valid line items found' });
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
