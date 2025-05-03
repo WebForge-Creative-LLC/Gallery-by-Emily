@@ -35,23 +35,18 @@ app.post('/create-checkout-session', async (req, res) => {
   }));
 
   try {
-    const session = await stripe.checkout.sessions.create(
-      {
-        mode: 'payment',
-        payment_method_types: ['card'],
-        line_items,
-        success_url: `${process.env.DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.DOMAIN}/cart.html`,
-        payment_intent_data: {
-          transfer_data: {
-            destination: process.env.CLIENT_CONNECT_ACCOUNT
-          }
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items,
+      success_url: `${process.env.DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.DOMAIN}/cart.html`,
+      payment_intent_data: {
+        transfer_data: {
+          destination: process.env.CLIENT_CONNECT_ACCOUNT
         }
-      },
-      {
-        stripeAccount: process.env.CLIENT_CONNECT_ACCOUNT
       }
-    );
+    });
 
     res.json({ url: session.url });
   } catch (err) {
@@ -86,7 +81,3 @@ app.post('/send-email', async (req, res) => {
     res.status(500).json({ error: 'Email failed.' });
   }
 });
-
-// ───────────────────────────── SERVER START
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
