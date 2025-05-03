@@ -269,47 +269,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (checkoutButton) {
         checkoutButton.addEventListener('click', async () => {
-            if (cart.length === 0) {
-                alert('Your cart is empty. Add some items before checking out.');
-                return;
+          if (cart.length === 0) {
+            alert('Your cart is empty. Add some items before checking out.');
+            return;
+          }
+      
+          checkoutButton.disabled = true;
+          checkoutButton.textContent = 'Processing...';
+      
+          try {
+            const itemsForCheckout = {};
+            cart.forEach(item => {
+              if (item.priceId && item.quantity) {
+                itemsForCheckout[item.priceId] = item.quantity;
+              }
+            });
+      
+            console.log('Checkout items:', itemsForCheckout);
+      
+            const res = await fetch('/create-checkout-session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: itemsForCheckout })
+            });
+      
+            const data = await res.json();
+      
+            if (data.url) {
+              window.location.href = data.url;
+            } else {
+              throw new Error('Checkout failed');
             }
-
-            checkoutButton.disabled = true;
-            checkoutButton.textContent = 'Processing...';
-
-            try {
-                // Convert cart array into expected format for backend
-                const itemsForCheckout = {};
-                cart.forEach(item => {
-                    if (item.priceId && item.quantity) {
-                        itemsForCheckout[item.priceId] = item.quantity;
-                    }
-                });
-
-                // Log for debugging
-                console.log('Checkout items:', itemsForCheckout);
-
-                const res = await fetch('/create-checkout-session', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        items: itemsForCheckout
-                    })
-                });
-
-                const data = await res.json();
-
-                if (data.url) {
-                    window.location.href = data.url;
-                } else {
-                    throw new Error('Checkout failed');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('There was a problem processing your payment. Please try again.');
-                checkoutButton.disabled = false;
-                checkoutButton.textContent = 'Checkout';
-            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('There was a problem processing your payment. Please try again.');
+            checkoutButton.disabled = false;
+            checkoutButton.textContent = 'Checkout';
+          }
         });
-    }
+      }      
 });
