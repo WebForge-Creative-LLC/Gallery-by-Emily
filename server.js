@@ -29,10 +29,12 @@ app.post('/create-checkout-session', async (req, res) => {
     return res.status(400).json({ error: 'Cart is empty' });
   }
 
-  const line_items = Object.entries(items).map(([price, quantity]) => ({
+  const line_items = Object.entries(items)
+  .filter(([price, quantity]) => price && !isNaN(quantity))  // 👈 ensure valid data
+  .map(([price, quantity]) => ({
     price,
-    quantity: Number(quantity),
-  }));  
+    quantity: Number(quantity)
+  }));
 
   try {
     const session = await stripe.checkout.sessions.create({
