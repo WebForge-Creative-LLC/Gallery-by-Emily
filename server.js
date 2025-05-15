@@ -21,7 +21,37 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), 'public')));
 
+// Add this helper route to server.js to verify price IDs
+app.get('/verify-price/:priceId', async (req, res) => {
+  const { priceId } = req.params;
+  
+  try {
+    // Try to retrieve the price from the connected account
+    const price = await stripe.prices.retrieve(
+      priceId,
+      { stripeAccount: process.env.CLIENT_CONNECT_ACCOUNT }
+    );
+    
+    res.json({
+      valid: true,
+      price: {
+        id: price.id,
+        product: price.product,
+        unit_amount: price.unit_amount,
+        currency: price.currency
+      }
+    });
+  } catch (err) {
+    console.error(`Error verifying price ${priceId}:`, err.message);
+    res.status(404).json({
+      valid: false,
+      error: err.message
+    });
+  }
+});
+
 // ───────────────────────────── STRIPE CHECKOUT
+// Updated create-checkout-session route in server.js
 app.post('/create-checkout-session', async (req, res) => {
   const { items } = req.body;
 
@@ -41,6 +71,8 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 
   try {
+    // Create the checkout session with the connected account ID
+    // Ensure all prices are from the connected account
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
@@ -51,13 +83,22 @@ app.post('/create-checkout-session', async (req, res) => {
         transfer_data: {
           destination: process.env.CLIENT_CONNECT_ACCOUNT
         }
-      }
+      },
+      // Add this to use the connected account's prices
+      stripe_account: process.env.CLIENT_CONNECT_ACCOUNT
+    }, {
+      // This makes the API request authenticated as the platform
+      stripeAccount: process.env.CLIENT_CONNECT_ACCOUNT
     });
 
     res.json({ url: session.url });
   } catch (err) {
-    console.error('Stripe error →', err.response?.data || err.message || err);
-    res.status(500).json({ error: err.message || 'Unknown Stripe error' });
+    // Improved error logging
+    const errorMessage = err.message || 'Unknown Stripe error';
+    console.error('Stripe error →', errorMessage);
+    
+    // Return the specific error to the client
+    res.status(500).json({ error: errorMessage });
   }
 });
 
