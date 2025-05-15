@@ -273,30 +273,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Your cart is empty. Add some items before checking out.');
                 return;
             }
-
+    
             checkoutButton.disabled = true;
             checkoutButton.textContent = 'Processing...';
-
+    
             try {
-                const itemsForCheckout = cart.map(item => ({
-                    price: item.priceId,
-                    quantity: parseInt(item.quantity, 10)
-                }));
-
+                // Create an object where keys are price IDs and values are quantities
+                const itemsForCheckout = {};
+                
+                cart.forEach(item => {
+                    if (item.priceId && item.quantity) {
+                        itemsForCheckout[item.priceId] = parseInt(item.quantity, 10);
+                    }
+                });
+    
                 console.log('Checkout items:', itemsForCheckout);
-
+    
                 const res = await fetch('/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items: itemsForCheckout })
                 });
-
+    
                 const data = await res.json();
-
+    
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error('Checkout failed');
+                    throw new Error(data.error || 'Checkout failed');
                 }
             } catch (error) {
                 console.error('Error:', error);
