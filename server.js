@@ -52,6 +52,7 @@ app.get('/verify-price/:priceId', async (req, res) => {
 
 // ───────────────────────────── STRIPE CHECKOUT
 // Updated create-checkout-session route in server.js
+// Fixed create-checkout-session route in server.js
 app.post('/create-checkout-session', async (req, res) => {
   const { items } = req.body;
 
@@ -71,25 +72,24 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 
   try {
-    // Create the checkout session with the connected account ID
-    // Ensure all prices are from the connected account
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items,
-      success_url: `${process.env.DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.DOMAIN}/cart.html`,
-      payment_intent_data: {
-        transfer_data: {
-          destination: process.env.CLIENT_CONNECT_ACCOUNT
+    // Create the checkout session on behalf of the connected account
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: 'payment',
+        payment_method_types: ['card'],
+        line_items,
+        success_url: `${process.env.DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.DOMAIN}/cart.html`,
+        payment_intent_data: {
+          transfer_data: {
+            destination: process.env.CLIENT_CONNECT_ACCOUNT
+          }
         }
       },
-      // Add this to use the connected account's prices
-      stripe_account: process.env.CLIENT_CONNECT_ACCOUNT
-    }, {
-      // This makes the API request authenticated as the platform
-      stripeAccount: process.env.CLIENT_CONNECT_ACCOUNT
-    });
+      {
+        stripeAccount: process.env.CLIENT_CONNECT_ACCOUNT
+      }
+    );
 
     res.json({ url: session.url });
   } catch (err) {
